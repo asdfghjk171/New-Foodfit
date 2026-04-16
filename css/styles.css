@@ -11,8 +11,8 @@
     --accent: #e8a721;
     --bg-deep: #1a2e1c;
     --bg-main: #223524;
-    --bg-card: rgba(30, 55, 32, 0.82);
-    --bg-card-solid: #1e3720;
+    --bg-card: rgba(20, 40, 22, 0.72);
+    --bg-card-solid: #1a3218;
     --bg-glass: rgba(45, 143, 78, 0.08);
     --text-primary: #f5f9f0;
     --text-secondary: #c2d8b5;
@@ -52,10 +52,9 @@ body::before {
     content: '';
     position: fixed;
     inset: 0;
-    background: url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=1920&q=80') center/cover no-repeat;
-    opacity: 0.32;
+    background: url('https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=2560&q=100&fit=crop') center/cover no-repeat;
+    opacity: 0.55;
     z-index: -2;
-    animation: bgPulse 25s ease-in-out infinite alternate;
 }
 
 body::after {
@@ -63,16 +62,8 @@ body::after {
     position: fixed;
     inset: 0;
     background:
-        radial-gradient(ellipse at 15% 50%, rgba(74, 186, 106, 0.10) 0%, transparent 55%),
-        radial-gradient(ellipse at 85% 20%, rgba(232, 93, 58, 0.07) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 90%, rgba(232, 167, 33, 0.06) 0%, transparent 45%),
-        linear-gradient(180deg, rgba(26, 46, 28, 0.82) 0%, rgba(34, 53, 36, 0.72) 50%, rgba(26, 46, 28, 0.85) 100%);
+        linear-gradient(180deg, rgba(15, 28, 16, 0.52) 0%, rgba(18, 32, 18, 0.40) 40%, rgba(15, 28, 16, 0.55) 100%);
     z-index: -1;
-}
-
-@keyframes bgPulse {
-    0% { opacity: 0.28; transform: scale(1); }
-    100% { opacity: 0.36; transform: scale(1.03); }
 }
 
 /* ========== LOADING SCREEN ========== */

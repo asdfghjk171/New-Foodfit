@@ -1,62 +1,50 @@
 # HealthFit - PRD & Progress Tracker
 
 ## Original Problem Statement
-User had a GitHub Pages static health/nutrition web app at https://asdfghjk171.github.io/New-Foodfit/ with multiple critical issues. Required industry-level improvements + new features.
+Static health/nutrition web app for GitHub Pages. Food recommendation focus. Multiple iterations of bug fixes and feature additions.
 
 ## Architecture
-- **Stack**: Pure HTML/CSS/JavaScript (static site for GitHub Pages)
-- **Auth**: localStorage-based (simulated login/signup)
-- **Food Database**: Built-in 1500+ items (70% Indian, 30% International) from user's CSV
-- **Charts**: Chart.js 4.x (doughnut + bar)
-- **PDF**: jsPDF 2.5.1
-- **No backend required** - everything runs client-side
+- **Stack**: Pure HTML/CSS/JavaScript (static, GitHub Pages)
+- **Auth**: localStorage-based
+- **Food Database**: 1500+ items (70% Indian) from user's CSV
+- **Charts**: Chart.js 4.x | **PDF**: jsPDF 2.5.1
 
-## Project Structure (GitHub Pages ready)
+## Project Structure (for GitHub Pages)
 ```
 /
-├── index.html              # Main HTML
-├── css/styles.css          # All styling
+├── index.html
+├── css/styles.css
 ├── js/
-│   ├── foodDatabase.js     # 1500+ food items with macros
-│   ├── app.js              # Main logic, page management, auth state
-│   ├── auth.js             # Login/signup handlers
-│   ├── dashboard.js        # BMI/BMR calculator
-│   ├── charts.js           # Chart.js integration
-│   ├── api.js              # Food search & recommendations
-│   ├── mealPlanner.js      # Weekly plan + export/import
-│   └── pdf.js              # PDF report generation
+│   ├── foodDatabase.js
+│   ├── app.js
+│   ├── auth.js
+│   ├── dashboard.js
+│   ├── charts.js
+│   ├── api.js
+│   ├── mealPlanner.js
+│   └── pdf.js
 ```
 
-## What's Been Implemented
-
-### Session 1 (Jan 2026) - Major Bug Fixes + UI Overhaul
-1. **Login Popup Bug Fix** - CSS `.auth-page` specificity issue resolved
-2. **BMI/BMR Calculator** - Working with gauge, category, daily target, Indian health suggestions
-3. **Toggle Buttons** - Fully visible (All, Veg, Non-Veg, High Protein)
-4. **Food Database** - 1499 foods from HBRS.csv with estimated macros
-5. **Food Search** - Built-in database replacing OpenFoodFacts API, Indian foods prioritized
-6. **Charts** - Real macronutrient split + calories-by-meal (not dummy data)
-7. **UI Overhaul** - Dark green theme, food background, Playfair Display + DM Sans, glassmorphism
-8. **Popular Indian Foods** - Quick-add chips
-9. **Recommended Foods** - BMI-based dashboard recommendations
-10. **PDF Reports** - Improved PDF with health metrics & meal breakdown
-
-### Session 2 (Jan 2026) - Weekly Plan + Export/Import
-11. **Weekly Meal Plan View** - 7-day calendar grid (Mon-Sun) with:
-    - Today badge + green highlighted border
-    - Meal data displayed per day with calorie counts
-    - Weekly summary bar (total kcal, avg kcal/day, meals, days planned)
-    - Prev/Next week navigation
-    - Edit button → opens day in daily planner
-    - Copy button → copies day's plan to today
-12. **Export Daily Meal Plan** - Download today's plan as JSON
-13. **Import Daily Meal Plan** - Upload JSON file to load plan
-14. **Export Weekly Plan** - Download entire week as JSON
-15. **Import Weekly Plan** - Upload weekly JSON to restore all 7 days
-16. **Cross-day editing** - Edit any day from weekly view, save back to correct date
+## All Implemented Features
+1. Login popup bug fix (CSS specificity)
+2. BMI/BMR Calculator with gauge, daily target
+3. Dietary toggle buttons (All, Veg, Non-Veg, High Protein)
+4. 1499-food database with macros
+5. Built-in food search (Indian prioritized)
+6. Real-time charts (macros + calories-by-meal)
+7. HD food background image (high visibility, minimal overlay)
+8. Color theme derived from vegetable image
+9. Hero: "Personalized Food Recommendations for Your Health"
+10. Categorized food recommendations (Breakfast, Lunch, Dinner, Snack Picks)
+11. Expanded health suggestions with exercise plans (HIIT, yoga, walking, reps)
+12. Weekly Meal Plan View (7-day grid, Today badge, Prev/Next, Edit/Copy)
+13. Export/Import daily + weekly meal plans as JSON
+14. PDF reports with nutrition chart data, macro bars, exercise suggestions
+15. Popular Indian Foods quick-add chips
+16. Meal timeline with calorie badges
+17. History, Profile, Logout all working
 
 ## Backlog
 - P1: Mobile hamburger menu
 - P2: Water intake tracker
-- P3: Exercise log
-- P3: Social sharing of meal plans
+- P3: Meal Prep Cost Estimator
