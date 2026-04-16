@@ -31,6 +31,7 @@
                 <ul class="nav-menu" data-testid="nav-menu">
                     <li><a href="#" class="nav-link active" data-page="dashboard" data-testid="nav-dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                     <li><a href="#" class="nav-link" data-page="meal-planner" data-testid="nav-meal-planner"><i class="fas fa-utensils"></i> Meal Planner</a></li>
+                    <li><a href="#" class="nav-link" data-page="weekly-plan" data-testid="nav-weekly-plan"><i class="fas fa-calendar-week"></i> Weekly Plan</a></li>
                     <li><a href="#" class="nav-link" data-page="history" data-testid="nav-history"><i class="fas fa-clock-rotate-left"></i> History</a></li>
                     <li><a href="#" class="nav-link" data-page="profile" data-testid="nav-profile"><i class="fas fa-user-circle"></i> Profile</a></li>
                 </ul>
@@ -339,8 +340,46 @@
                         <div class="meal-actions">
                             <button id="save-meal-plan" class="btn btn-primary" data-testid="save-meal-plan-btn"><i class="fas fa-save"></i> Save Meal Plan</button>
                             <button id="download-pdf" class="btn btn-outline" data-testid="download-pdf-btn"><i class="fas fa-file-pdf"></i> Download PDF</button>
+                            <button class="btn btn-outline" onclick="exportMealPlanJSON()" data-testid="export-json-btn"><i class="fas fa-file-export"></i> Export JSON</button>
+                            <label class="btn btn-outline" data-testid="import-json-btn" style="cursor:pointer;"><i class="fas fa-file-import"></i> Import JSON<input type="file" id="import-json-input" accept=".json" style="display:none;" onchange="importMealPlanJSON(this)" data-testid="import-json-input"></label>
                             <button id="clear-meal-plan" class="btn btn-danger-outline" onclick="clearMealPlan()" data-testid="clear-meal-plan-btn"><i class="fas fa-trash"></i> Clear All</button>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========== WEEKLY PLAN PAGE ========== -->
+            <section id="weekly-plan-page" class="page" data-testid="weekly-plan-page">
+                <div class="weekly-container">
+                    <div class="dashboard-header">
+                        <div class="weekly-header-row">
+                            <div>
+                                <h1><i class="fas fa-calendar-week"></i> Weekly Meal Plan</h1>
+                                <p class="dashboard-subtitle">Plan and review your meals for the entire week</p>
+                            </div>
+                            <div class="weekly-nav" data-testid="weekly-nav">
+                                <button class="btn btn-outline btn-sm" onclick="changeWeek(-1)" data-testid="prev-week-btn"><i class="fas fa-chevron-left"></i> Prev</button>
+                                <span id="week-label" class="week-label" data-testid="week-label"></span>
+                                <button class="btn btn-outline btn-sm" onclick="changeWeek(1)" data-testid="next-week-btn">Next <i class="fas fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Weekly Summary -->
+                    <div class="weekly-summary-bar" data-testid="weekly-summary-bar">
+                        <div class="ws-item"><i class="fas fa-fire-flame-curved"></i><span id="week-total-cal" data-testid="week-total-cal">0</span><small>kcal total</small></div>
+                        <div class="ws-item"><span id="week-avg-cal" data-testid="week-avg-cal">0</span><small>avg kcal/day</small></div>
+                        <div class="ws-item"><span id="week-total-meals" data-testid="week-total-meals">0</span><small>meals</small></div>
+                        <div class="ws-item"><span id="week-planned-days" data-testid="week-planned-days">0</span><small>days planned</small></div>
+                    </div>
+
+                    <!-- Weekly Grid -->
+                    <div id="weekly-grid" class="weekly-grid" data-testid="weekly-grid"></div>
+
+                    <!-- Weekly Actions -->
+                    <div class="meal-actions" style="margin-top:1.5rem;">
+                        <button class="btn btn-primary" onclick="exportWeeklyPlanJSON()" data-testid="export-weekly-btn"><i class="fas fa-file-export"></i> Export Week</button>
+                        <label class="btn btn-outline" style="cursor:pointer;" data-testid="import-weekly-btn"><i class="fas fa-file-import"></i> Import Week<input type="file" accept=".json" style="display:none;" onchange="importWeeklyPlanJSON(this)" data-testid="import-weekly-input"></label>
                     </div>
                 </div>
             </section>

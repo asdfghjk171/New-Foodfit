@@ -1328,3 +1328,165 @@ body::after {
 
 /* Selection */
 ::selection { background: rgba(22, 163, 74, 0.3); color: white; }
+
+/* ========== WEEKLY PLAN ========== */
+.weekly-container { padding: 1rem 0; }
+
+.weekly-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.weekly-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.week-label {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-light);
+    min-width: 180px;
+    text-align: center;
+}
+
+.weekly-summary-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.ws-item {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.15rem;
+}
+.ws-item i { color: var(--accent); font-size: 1.1rem; margin-bottom: 0.2rem; }
+.ws-item span {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-light);
+}
+.ws-item small { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.3px; }
+
+.weekly-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+}
+
+.week-day-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: var(--transition);
+}
+.week-day-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow);
+}
+.week-day-card.is-today {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.15);
+}
+
+.wdc-header {
+    padding: 0.8rem 1rem;
+    background: rgba(22, 163, 74, 0.08);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.wdc-header h4 {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.wdc-header h4 .day-badge {
+    font-size: 0.68rem;
+    background: var(--primary);
+    color: white;
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-weight: 700;
+}
+.wdc-cal {
+    font-family: var(--font-heading);
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.wdc-body {
+    padding: 0.8rem 1rem;
+    min-height: 120px;
+}
+
+.wdc-meal-group { margin-bottom: 0.5rem; }
+.wdc-meal-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 0.2rem;
+    font-weight: 600;
+}
+
+.wdc-meal-item {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    padding: 0.2rem 0;
+    display: flex;
+    justify-content: space-between;
+}
+.wdc-meal-item .wdc-mi-cal {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.wdc-empty {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    text-align: center;
+    padding: 2rem 0.5rem;
+    font-style: italic;
+}
+
+.wdc-footer {
+    padding: 0.6rem 1rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 0.4rem;
+}
+
+.wdc-footer .btn {
+    flex: 1;
+    padding: 0.4rem;
+    font-size: 0.78rem;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .weekly-grid { grid-template-columns: 1fr; }
+    .weekly-summary-bar { grid-template-columns: repeat(2, 1fr); }
+    .weekly-header-row { flex-direction: column; }
+}

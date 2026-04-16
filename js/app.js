@@ -11,6 +11,7 @@ const AppState = {
     mealPlan: { breakfast: [], lunch: [], dinner: [], snacks: [] },
     currentMealSlot: null,
     userHealth: { height: null, weight: null, age: null, gender: null, bmi: null, bmr: null, category: null },
+    weekOffset: 0,
     _initialized: false
 };
 
@@ -128,6 +129,7 @@ function showPage(pageName) {
     switch (pageName) {
         case 'dashboard': loadDashboard(); break;
         case 'meal-planner': loadMealPlanner(); break;
+        case 'weekly-plan': if (typeof loadWeeklyPlan === 'function') loadWeeklyPlan(); break;
         case 'history': loadHistory(); break;
         case 'profile': loadProfile(); break;
     }
@@ -293,29 +295,32 @@ function saveMealPlan() {
         return;
     }
 
-    const today = getTodayDate();
-    localStorage.setItem('meal_' + AppState.currentUser.email + '_' + today, JSON.stringify(AppState.mealPlan));
+    var saveDate = AppState._editingDate || getTodayDate();
+    localStorage.setItem('meal_' + AppState.currentUser.email + '_' + saveDate, JSON.stringify(AppState.mealPlan));
 
     // Save to history
-    const historyKey = 'history_' + AppState.currentUser.email;
-    let history = [];
+    var historyKey = 'history_' + AppState.currentUser.email;
+    var history = [];
     try { history = JSON.parse(localStorage.getItem(historyKey) || '[]'); } catch (e) { history = []; }
 
-    const historyItem = {
-        date: today,
+    var historyItem = {
+        date: saveDate,
         timestamp: new Date().toISOString(),
         type: 'meal_plan',
         data: JSON.parse(JSON.stringify(AppState.mealPlan))
     };
 
-    const existingIdx = history.findIndex(i => i.date === today && i.type === 'meal_plan');
+    var existingIdx = history.findIndex(function(i) { return i.date === saveDate && i.type === 'meal_plan'; });
     if (existingIdx >= 0) { history[existingIdx] = historyItem; }
     else { history.unshift(historyItem); }
 
-    history = history.slice(0, 30);
+    history = history.slice(0, 60);
     localStorage.setItem(historyKey, JSON.stringify(history));
 
-    showToast('Meal plan saved!', 'success');
+    // Clear editing date
+    AppState._editingDate = null;
+
+    showToast('Meal plan saved for ' + saveDate + '!', 'success');
 }
 
 function loadHistory() {
