@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthFit - Your Personal Health & Nutrition Planner</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <!-- jsPDF CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loader"></div>
+        <p>Loading HealthFit...</p>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app" class="app-container" style="display: none;">
+        
+        <!-- Navigation Bar (Hidden on auth screens) -->
+        <nav id="navbar" class="navbar" style="display: none;">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <i class="fas fa-heartbeat"></i>
+                    <span>HealthFit</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#" data-page="dashboard" class="nav-link active"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="#" data-page="meal-planner" class="nav-link"><i class="fas fa-utensils"></i> Meal Planner</a></li>
+                    <li><a href="#" data-page="history" class="nav-link"><i class="fas fa-history"></i> History</a></li>
+                    <li><a href="#" data-page="profile" class="nav-link"><i class="fas fa-user"></i> Profile</a></li>
+                </ul>
+                <button id="logout-btn" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </nav>
+
+        <!-- Content Container -->
+        <main id="main-content" class="main-content">
+            
+            <!-- Landing Page -->
+            <section id="landing-page" class="page active">
+                <div class="landing-container">
+                    <div class="landing-hero">
+                        <h1 class="hero-title">Welcome to <span class="gradient-text">HealthFit</span></h1>
+                        <p class="hero-subtitle">Your Personal AI-Powered Health & Nutrition Companion</p>
+                        <p class="hero-description">Track your nutrition, plan meals, calculate BMI, and achieve your health goals with personalized recommendations.</p>
+                        <div class="hero-buttons">
+                            <button id="get-started-btn" class="btn btn-primary" data-testid="get-started-btn">Get Started</button>
+                            <button id="login-btn" class="btn btn-secondary" data-testid="login-btn">Login</button>
+                        </div>
+                    </div>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon"><i class="fas fa-calculator"></i></div>
+                            <h3>BMI Calculator</h3>
+                            <p>Calculate your Body Mass Index and get personalized health insights</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon"><i class="fas fa-chart-pie"></i></div>
+                            <h3>Nutrition Charts</h3>
+                            <p>Visualize your daily protein, carbs, and fat intake with interactive charts</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon"><i class="fas fa-utensils"></i></div>
+                            <h3>Meal Planning</h3>
+                            <p>Plan your meals with dietary preferences and nutritional goals</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon"><i class="fas fa-file-pdf"></i></div>
+                            <h3>PDF Reports</h3>
+                            <p>Download comprehensive health reports in PDF format</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Login Page -->
+            <section id="login-page" class="page auth-page">
+                <div class="auth-container">
+                    <div class="auth-card">
+                        <h2 class="auth-title">Welcome Back</h2>
+                        <p class="auth-subtitle">Login to continue your health journey</p>
+                        <form id="login-form" class="auth-form">
+                            <div class="form-group">
+                                <label for="login-email"><i class="fas fa-envelope"></i> Email</label>
+                                <input type="email" id="login-email" name="email" placeholder="Enter your email" required data-testid="login-email">
+                            </div>
+                            <div class="form-group">
+                                <label for="login-password"><i class="fas fa-lock"></i> Password</label>
+                                <input type="password" id="login-password" name="password" placeholder="Enter your password" required data-testid="login-password">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block" data-testid="login-submit-btn">Login</button>
+                        </form>
+                        <p class="auth-footer">Don't have an account? <a href="#" id="show-signup" class="auth-link">Sign Up</a></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Signup Page -->
+            <section id="signup-page" class="page auth-page">
+                <div class="auth-container">
+                    <div class="auth-card">
+                        <h2 class="auth-title">Create Account</h2>
+                        <p class="auth-subtitle">Start your health journey today</p>
+                        <form id="signup-form" class="auth-form">
+                            <div class="form-group">
+                                <label for="signup-name"><i class="fas fa-user"></i> Full Name</label>
+                                <input type="text" id="signup-name" name="name" placeholder="Enter your full name" required data-testid="signup-name">
+                            </div>
+                            <div class="form-group">
+                                <label for="signup-email"><i class="fas fa-envelope"></i> Email</label>
+                                <input type="email" id="signup-email" name="email" placeholder="Enter your email" required data-testid="signup-email">
+                            </div>
+                            <div class="form-group">
+                                <label for="signup-password"><i class="fas fa-lock"></i> Password</label>
+                                <input type="password" id="signup-password" name="password" placeholder="Create a password" required data-testid="signup-password">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block" data-testid="signup-submit-btn">Sign Up</button>
+                        </form>
+                        <p class="auth-footer">Already have an account? <a href="#" id="show-login" class="auth-link">Login</a></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dashboard Page -->
+            <section id="dashboard-page" class="page dashboard-page">
+                <div class="dashboard-container">
+                    <div class="dashboard-header">
+                        <h1>Welcome, <span id="user-name-display">User</span>!</h1>
+                        <p class="dashboard-subtitle">Here's your health overview</p>
+                    </div>
+
+                    <!-- BMI Calculator Section -->
+                    <div class="dashboard-section">
+                        <div class="section-card">
+                            <h2 class="section-title"><i class="fas fa-calculator"></i> BMI Calculator</h2>
+                            <form id="bmi-form" class="bmi-form">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="height">Height (cm)</label>
+                                        <input type="number" id="height" name="height" placeholder="170" required data-testid="height-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="weight">Weight (kg)</label>
+                                        <input type="number" id="weight" name="weight" placeholder="70" required data-testid="weight-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="age">Age</label>
+                                        <input type="number" id="age" name="age" placeholder="25" required data-testid="age-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="gender">Gender</label>
+                                        <select id="gender" name="gender" required data-testid="gender-select">
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary" data-testid="calculate-bmi-btn">Calculate BMI & BMR</button>
+                            </form>
+
+                            <!-- BMI Results -->
+                            <div id="bmi-results" class="bmi-results" style="display: none;">
+                                <div class="result-cards">
+                                    <div class="result-card">
+                                        <h3>Your BMI</h3>
+                                        <p class="result-value" id="bmi-value" data-testid="bmi-value">0</p>
+                                        <p class="result-label" id="bmi-category" data-testid="bmi-category">Normal</p>
+                                    </div>
+                                    <div class="result-card">
+                                        <h3>Your BMR</h3>
+                                        <p class="result-value" id="bmr-value" data-testid="bmr-value">0</p>
+                                        <p class="result-label">calories/day</p>
+                                    </div>
+                                </div>
+                                <div class="health-suggestions">
+                                    <h3><i class="fas fa-lightbulb"></i> Smart Health Suggestions</h3>
+                                    <ul id="suggestions-list" data-testid="suggestions-list"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nutrition Charts Section -->
+                    <div class="dashboard-section">
+                        <div class="section-card">
+                            <h2 class="section-title"><i class="fas fa-chart-pie"></i> Nutrition Overview</h2>
+                            <div class="charts-container">
+                                <div class="chart-wrapper">
+                                    <canvas id="macros-chart" data-testid="macros-chart"></canvas>
+                                </div>
+                                <div class="chart-wrapper">
+                                    <canvas id="calories-chart" data-testid="calories-chart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Meal Planner Page -->
+            <section id="meal-planner-page" class="page meal-planner-page">
+                <div class="meal-planner-container">
+                    <div class="dashboard-header">
+                        <h1><i class="fas fa-utensils"></i> Meal Planner</h1>
+                        <p class="dashboard-subtitle">Plan your meals and track nutrition</p>
+                    </div>
+
+                    <!-- Diet Preference Toggle -->
+                    <div class="diet-toggle-section">
+                        <h3>Dietary Preference</h3>
+                        <div class="toggle-group">
+                            <button class="toggle-btn active" data-diet="all" data-testid="diet-all-btn">All</button>
+                            <button class="toggle-btn" data-diet="vegetarian" data-testid="diet-veg-btn">Vegetarian</button>
+                            <button class="toggle-btn" data-diet="non-vegetarian" data-testid="diet-non-veg-btn">Non-Vegetarian</button>
+                        </div>
+                    </div>
+
+                    <!-- Food Search Section -->
+                    <div class="section-card">
+                        <h2 class="section-title"><i class="fas fa-search"></i> Search Foods</h2>
+                        <div class="search-bar">
+                            <input type="text" id="food-search" placeholder="Search for foods (e.g., apple, chicken, rice)..." data-testid="food-search-input">
+                            <button id="search-food-btn" class="btn btn-primary" data-testid="search-food-btn"><i class="fas fa-search"></i> Search</button>
+                        </div>
+                        <div id="search-results" class="search-results" data-testid="search-results"></div>
+                    </div>
+
+                    <!-- Meal Timeline -->
+                    <div class="section-card">
+                        <h2 class="section-title"><i class="fas fa-clock"></i> Today's Meal Timeline</h2>
+                        <div id="meal-timeline" class="meal-timeline" data-testid="meal-timeline">
+                            <div class="meal-slot" data-meal="breakfast">
+                                <div class="meal-header">
+                                    <h3><i class="fas fa-sun"></i> Breakfast</h3>
+                                    <button class="btn-add-meal" data-testid="add-breakfast-btn"><i class="fas fa-plus"></i></button>
+                                </div>
+                                <div class="meal-items" data-testid="breakfast-items"></div>
+                            </div>
+                            <div class="meal-slot" data-meal="lunch">
+                                <div class="meal-header">
+                                    <h3><i class="fas fa-cloud-sun"></i> Lunch</h3>
+                                    <button class="btn-add-meal" data-testid="add-lunch-btn"><i class="fas fa-plus"></i></button>
+                                </div>
+                                <div class="meal-items" data-testid="lunch-items"></div>
+                            </div>
+                            <div class="meal-slot" data-meal="dinner">
+                                <div class="meal-header">
+                                    <h3><i class="fas fa-moon"></i> Dinner</h3>
+                                    <button class="btn-add-meal" data-testid="add-dinner-btn"><i class="fas fa-plus"></i></button>
+                                </div>
+                                <div class="meal-items" data-testid="dinner-items"></div>
+                            </div>
+                            <div class="meal-slot" data-meal="snacks">
+                                <div class="meal-header">
+                                    <h3><i class="fas fa-cookie"></i> Snacks</h3>
+                                    <button class="btn-add-meal" data-testid="add-snacks-btn"><i class="fas fa-plus"></i></button>
+                                </div>
+                                <div class="meal-items" data-testid="snacks-items"></div>
+                            </div>
+                        </div>
+                        <div class="meal-actions">
+                            <button id="save-meal-plan" class="btn btn-primary" data-testid="save-meal-plan-btn"><i class="fas fa-save"></i> Save Meal Plan</button>
+                            <button id="download-pdf" class="btn btn-secondary" data-testid="download-pdf-btn"><i class="fas fa-file-pdf"></i> Download PDF</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- History Page -->
+            <section id="history-page" class="page history-page">
+                <div class="history-container">
+                    <div class="dashboard-header">
+                        <h1><i class="fas fa-history"></i> History</h1>
+                        <p class="dashboard-subtitle">View your saved meal plans and health data</p>
+                    </div>
+                    <div id="history-content" class="history-content" data-testid="history-content">
+                        <!-- History items will be loaded here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile Page -->
+            <section id="profile-page" class="page profile-page">
+                <div class="profile-container">
+                    <div class="dashboard-header">
+                        <h1><i class="fas fa-user"></i> Profile</h1>
+                        <p class="dashboard-subtitle">Manage your account settings</p>
+                    </div>
+                    <div class="section-card">
+                        <div class="profile-section">
+                            <div class="profile-image-section">
+                                <div class="profile-image-wrapper">
+                                    <img id="profile-image" src="https://via.placeholder.com/150" alt="Profile" data-testid="profile-image">
+                                    <label for="profile-image-upload" class="upload-label">
+                                        <i class="fas fa-camera"></i>
+                                    </label>
+                                    <input type="file" id="profile-image-upload" accept="image/*" style="display: none;" data-testid="profile-image-upload">
+                                </div>
+                            </div>
+                            <div class="profile-info">
+                                <h2 id="profile-name" data-testid="profile-name">User Name</h2>
+                                <p id="profile-email" data-testid="profile-email">user@example.com</p>
+                            </div>
+                        </div>
+                        <div class="profile-stats">
+                            <div class="stat-card">
+                                <i class="fas fa-calendar-check"></i>
+                                <h3>Meal Plans Saved</h3>
+                                <p id="meal-plans-count" data-testid="meal-plans-count">0</p>
+                            </div>
+                            <div class="stat-card">
+                                <i class="fas fa-chart-line"></i>
+                                <h3>Days Active</h3>
+                                <p id="days-active" data-testid="days-active">0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- JavaScript Files -->
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/mealPlanner.js"></script>
+    <script src="js/pdf.js"></script>
+</body>
+</html>
