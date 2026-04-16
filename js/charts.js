@@ -1,82 +1,69 @@
 // ==========================================
-// HEALTHFIT - CHARTS LOGIC
+// HEALTHFIT - CHARTS (FIXED - Real data, no useless defaults)
 // ==========================================
 
 let macrosChart = null;
 let caloriesChart = null;
 
-// Initialize Charts
 function initializeCharts() {
-    // Check if Chart.js is loaded
-    if (typeof Chart === 'undefined') {
-        console.error('Chart.js is not loaded');
-        return;
-    }
-    
-    // Destroy existing charts if they exist
-    if (macrosChart) macrosChart.destroy();
-    if (caloriesChart) caloriesChart.destroy();
-    
-    // Get canvas elements
+    if (typeof Chart === 'undefined') return;
+
     const macrosCanvas = document.getElementById('macros-chart');
     const caloriesCanvas = document.getElementById('calories-chart');
-    
     if (!macrosCanvas || !caloriesCanvas) return;
-    
-    // Calculate total macros from today's meal plan
+
     const totals = calculateTotalMacros();
-    
-    // Create Macros Pie Chart
+    const hasMealData = totals.protein > 0 || totals.carbs > 0 || totals.fat > 0;
+
+    const emptyState = document.getElementById('charts-empty-state');
+    const chartsArea = document.getElementById('charts-area');
+
+    if (!hasMealData) {
+        if (emptyState) emptyState.style.display = 'block';
+        if (chartsArea) chartsArea.style.display = 'none';
+        return;
+    }
+
+    if (emptyState) emptyState.style.display = 'none';
+    if (chartsArea) chartsArea.style.display = 'grid';
+
+    if (macrosChart) macrosChart.destroy();
+    if (caloriesChart) caloriesChart.destroy();
+
+    // Macros Doughnut Chart
     macrosChart = new Chart(macrosCanvas, {
         type: 'doughnut',
         data: {
-            labels: ['Protein', 'Carbs', 'Fat'],
+            labels: ['Protein (' + Math.round(totals.protein) + 'g)', 'Carbs (' + Math.round(totals.carbs) + 'g)', 'Fat (' + Math.round(totals.fat) + 'g)'],
             datasets: [{
                 data: [totals.protein, totals.carbs, totals.fat],
-                backgroundColor: [
-                    'rgba(16, 185, 129, 0.8)',
-                    'rgba(59, 130, 246, 0.8)',
-                    'rgba(245, 158, 11, 0.8)'
-                ],
-                borderColor: [
-                    'rgba(16, 185, 129, 1)',
-                    'rgba(59, 130, 246, 1)',
-                    'rgba(245, 158, 11, 1)'
-                ],
-                borderWidth: 2
+                backgroundColor: ['rgba(14, 165, 233, 0.85)', 'rgba(34, 197, 94, 0.85)', 'rgba(245, 158, 11, 0.85)'],
+                borderColor: ['rgba(14, 165, 233, 1)', 'rgba(34, 197, 94, 1)', 'rgba(245, 158, 11, 1)'],
+                borderWidth: 2,
+                hoverOffset: 8
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: true,
+            cutout: '60%',
             plugins: {
                 legend: {
                     position: 'bottom',
-                    labels: {
-                        color: '#f1f5f9',
-                        font: {
-                            size: 12,
-                            family: 'Poppins'
-                        },
-                        padding: 15
-                    }
+                    labels: { color: '#a7c4ab', font: { size: 12, family: 'DM Sans' }, padding: 15, usePointStyle: true }
                 },
                 title: {
                     display: true,
-                    text: 'Macronutrient Distribution',
-                    color: '#f1f5f9',
-                    font: {
-                        size: 16,
-                        family: 'Poppins',
-                        weight: '600'
-                    },
-                    padding: 20
+                    text: 'Macronutrient Split',
+                    color: '#f0fdf4',
+                    font: { size: 15, family: 'Playfair Display', weight: '600' },
+                    padding: { bottom: 15 }
                 }
             }
         }
     });
-    
-    // Create Calories Bar Chart
+
+    // Calories Bar Chart
     caloriesChart = new Chart(caloriesCanvas, {
         type: 'bar',
         data: {
@@ -89,10 +76,11 @@ function initializeCharts() {
                     calculateMealCalories('dinner'),
                     calculateMealCalories('snacks')
                 ],
-                backgroundColor: 'rgba(16, 185, 129, 0.8)',
-                borderColor: 'rgba(16, 185, 129, 1)',
+                backgroundColor: ['rgba(245, 158, 11, 0.75)', 'rgba(34, 197, 94, 0.75)', 'rgba(14, 165, 233, 0.75)', 'rgba(168, 85, 247, 0.75)'],
+                borderColor: ['rgba(245, 158, 11, 1)', 'rgba(34, 197, 94, 1)', 'rgba(14, 165, 233, 1)', 'rgba(168, 85, 247, 1)'],
                 borderWidth: 2,
-                borderRadius: 8
+                borderRadius: 8,
+                barPercentage: 0.6
             }]
         },
         options: {
@@ -101,95 +89,49 @@ function initializeCharts() {
             scales: {
                 y: {
                     beginAtZero: true,
-                    ticks: {
-                        color: '#94a3b8',
-                        font: {
-                            family: 'Poppins'
-                        }
-                    },
-                    grid: {
-                        color: 'rgba(148, 163, 184, 0.1)'
-                    }
+                    ticks: { color: '#6b8a70', font: { family: 'DM Sans' } },
+                    grid: { color: 'rgba(34, 197, 94, 0.06)' }
                 },
                 x: {
-                    ticks: {
-                        color: '#94a3b8',
-                        font: {
-                            family: 'Poppins'
-                        }
-                    },
-                    grid: {
-                        display: false
-                    }
+                    ticks: { color: '#a7c4ab', font: { family: 'DM Sans' } },
+                    grid: { display: false }
                 }
             },
             plugins: {
-                legend: {
-                    display: false
-                },
+                legend: { display: false },
                 title: {
                     display: true,
                     text: 'Calories by Meal',
-                    color: '#f1f5f9',
-                    font: {
-                        size: 16,
-                        family: 'Poppins',
-                        weight: '600'
-                    },
-                    padding: 20
+                    color: '#f0fdf4',
+                    font: { size: 15, family: 'Playfair Display', weight: '600' },
+                    padding: { bottom: 15 }
                 }
             }
         }
     });
 }
 
-// Calculate Total Macros from all meals
 function calculateTotalMacros() {
-    let totalProtein = 0;
-    let totalCarbs = 0;
-    let totalFat = 0;
-    
+    let p = 0, c = 0, f = 0;
     Object.values(AppState.mealPlan).forEach(meals => {
-        meals.forEach(meal => {
-            totalProtein += parseFloat(meal.protein) || 0;
-            totalCarbs += parseFloat(meal.carbs) || 0;
-            totalFat += parseFloat(meal.fat) || 0;
+        meals.forEach(m => {
+            p += parseFloat(m.protein) || 0;
+            c += parseFloat(m.carbs) || 0;
+            f += parseFloat(m.fat) || 0;
         });
     });
-    
-    // If no data, show default values
-    if (totalProtein === 0 && totalCarbs === 0 && totalFat === 0) {
-        return {
-            protein: 30,
-            carbs: 50,
-            fat: 20
-        };
-    }
-    
-    return {
-        protein: totalProtein,
-        carbs: totalCarbs,
-        fat: totalFat
-    };
+    return { protein: p, carbs: c, fat: f };
 }
 
-// Calculate Calories for a specific meal
 function calculateMealCalories(mealType) {
     const meals = AppState.mealPlan[mealType];
     if (!meals || meals.length === 0) return 0;
-    
-    return meals.reduce((total, meal) => {
-        return total + (parseFloat(meal.calories) || 0);
-    }, 0);
+    return meals.reduce((t, m) => t + (parseFloat(m.calories) || 0), 0);
 }
 
-// Update charts when health data changes
 function updateChartsWithHealthData() {
-    if (macrosChart && caloriesChart) {
-        initializeCharts();
-    }
+    initializeCharts();
 }
 
-// Make function globally accessible
 window.initializeCharts = initializeCharts;
 window.updateChartsWithHealthData = updateChartsWithHealthData;

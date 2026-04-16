@@ -1,204 +1,151 @@
 // ==========================================
-// HEALTHFIT - PDF GENERATION LOGIC
+// HEALTHFIT - PDF GENERATION (IMPROVED)
 // ==========================================
 
-// Generate PDF Report
 function generatePDF() {
-    // Check if jsPDF is loaded
     if (typeof jspdf === 'undefined') {
-        showToast('PDF library not loaded. Please refresh the page.', 'error');
+        showToast('PDF library not loaded. Please refresh.', 'error');
         return;
     }
-    
     if (!AppState.currentUser) {
         showToast('Please login to generate PDF', 'error');
         return;
     }
-    
+
     try {
-        // Get jsPDF from the global scope
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        
-        // Get summary data
-        const summary = getMealPlanSummary();
-        const today = getTodayDate();
-        
-        // Set up styling
-        const primaryColor = [16, 185, 129];
-        const textColor = [15, 23, 42];
-        const secondaryColor = [148, 163, 184];
-        
-        let yPosition = 20;
-        
+        var jsPDF = window.jspdf.jsPDF;
+        var doc = new jsPDF();
+        var summary = getMealPlanSummary();
+        var today = getTodayDate();
+
+        var green = [22, 163, 74];
+        var dark = [15, 31, 18];
+        var text = [240, 253, 244];
+        var muted = [107, 138, 112];
+        var blue = [14, 165, 233];
+        var y = 15;
+
+        // Header background
+        doc.setFillColor(15, 31, 18);
+        doc.rect(0, 0, 210, 40, 'F');
+        doc.setFillColor(22, 163, 74);
+        doc.rect(0, 38, 210, 2, 'F');
+
         // Title
-        doc.setFontSize(24);
-        doc.setTextColor(...primaryColor);
-        doc.text('HealthFit Meal Plan Report', 105, yPosition, { align: 'center' });
-        
-        yPosition += 10;
-        
-        // Date
-        doc.setFontSize(12);
-        doc.setTextColor(...secondaryColor);
-        doc.text(`Generated on: ${today}`, 105, yPosition, { align: 'center' });
-        
-        yPosition += 15;
-        
-        // User Info
-        doc.setFontSize(14);
-        doc.setTextColor(...textColor);
-        doc.text(`User: ${AppState.currentUser.name}`, 20, yPosition);
-        yPosition += 7;
-        doc.setFontSize(10);
-        doc.setTextColor(...secondaryColor);
-        doc.text(`Email: ${AppState.currentUser.email}`, 20, yPosition);
-        
-        yPosition += 15;
-        
-        // Health Data (if available)
-        if (AppState.userHealth.bmi) {
-            doc.setFontSize(16);
-            doc.setTextColor(...primaryColor);
-            doc.text('Health Metrics', 20, yPosition);
-            yPosition += 10;
-            
-            doc.setFontSize(11);
-            doc.setTextColor(...textColor);
-            doc.text(`BMI: ${AppState.userHealth.bmi.toFixed(1)} (${AppState.userHealth.category})`, 20, yPosition);
-            yPosition += 6;
-            doc.text(`BMR: ${Math.round(AppState.userHealth.bmr)} calories/day`, 20, yPosition);
-            yPosition += 6;
-            doc.text(`Height: ${AppState.userHealth.height} cm | Weight: ${AppState.userHealth.weight} kg`, 20, yPosition);
-            yPosition += 6;
-            doc.text(`Age: ${AppState.userHealth.age} | Gender: ${AppState.userHealth.gender}`, 20, yPosition);
-            
-            yPosition += 15;
-        }
-        
-        // Meal Plan Summary
-        doc.setFontSize(16);
-        doc.setTextColor(...primaryColor);
-        doc.text('Daily Nutrition Summary', 20, yPosition);
-        yPosition += 10;
-        
+        doc.setFontSize(22);
+        doc.setTextColor(22, 163, 74);
+        doc.text('HealthFit', 15, y + 8);
         doc.setFontSize(11);
-        doc.setTextColor(...textColor);
-        doc.text(`Total Meals: ${summary.totalMeals}`, 20, yPosition);
-        yPosition += 6;
-        doc.text(`Total Calories: ${Math.round(summary.totalCalories)} kcal`, 20, yPosition);
-        yPosition += 6;
-        doc.text(`Protein: ${Math.round(summary.totalProtein)}g | Carbs: ${Math.round(summary.totalCarbs)}g | Fat: ${Math.round(summary.totalFat)}g`, 20, yPosition);
-        
-        yPosition += 15;
-        
-        // Meal Breakdown
-        doc.setFontSize(16);
-        doc.setTextColor(...primaryColor);
-        doc.text('Meal Breakdown', 20, yPosition);
-        yPosition += 10;
-        
-        const mealTypes = ['breakfast', 'lunch', 'dinner', 'snacks'];
-        const mealIcons = {
-            breakfast: '☀️',
-            lunch: '🌤️',
-            dinner: '🌙',
-            snacks: '🍪'
-        };
-        
-        mealTypes.forEach(mealType => {
-            const meals = AppState.mealPlan[mealType];
-            const breakdown = summary.mealBreakdown[mealType];
-            
-            if (yPosition > 250) {
-                doc.addPage();
-                yPosition = 20;
-            }
-            
-            doc.setFontSize(14);
-            doc.setTextColor(...textColor);
-            doc.text(`${mealType.charAt(0).toUpperCase() + mealType.slice(1)} (${breakdown.count} items)`, 20, yPosition);
-            yPosition += 7;
-            
-            if (meals.length > 0) {
-                doc.setFontSize(10);
-                doc.setTextColor(...secondaryColor);
-                
-                meals.forEach((meal, index) => {
-                    if (yPosition > 270) {
-                        doc.addPage();
-                        yPosition = 20;
-                    }
-                    
-                    const mealText = `  ${index + 1}. ${meal.name}`;
-                    doc.text(mealText, 25, yPosition);
-                    yPosition += 5;
-                    
-                    const nutritionText = `     Cal: ${meal.calories || 0} | P: ${meal.protein || 0}g | C: ${meal.carbs || 0}g | F: ${meal.fat || 0}g`;
-                    doc.text(nutritionText, 25, yPosition);
-                    yPosition += 6;
-                });
-                
-                doc.setFontSize(10);
-                doc.setTextColor(...textColor);
-                doc.text(`  Subtotal: ${breakdown.calories} kcal`, 25, yPosition);
-                yPosition += 10;
-            } else {
-                doc.setFontSize(10);
-                doc.setTextColor(...secondaryColor);
-                doc.text('  No meals added', 25, yPosition);
-                yPosition += 10;
-            }
-        });
-        
-        // Health Suggestions (if available)
+        doc.setTextColor(167, 196, 171);
+        doc.text('Personal Health & Meal Plan Report', 15, y + 16);
+        doc.setFontSize(9);
+        doc.text('Date: ' + today + '  |  User: ' + AppState.currentUser.name + '  |  ' + AppState.currentUser.email, 15, y + 24);
+
+        y = 48;
+
+        // Health Metrics
         if (AppState.userHealth.bmi) {
-            if (yPosition > 220) {
-                doc.addPage();
-                yPosition = 20;
-            }
-            
-            doc.setFontSize(16);
-            doc.setTextColor(...primaryColor);
-            doc.text('Health Recommendations', 20, yPosition);
-            yPosition += 10;
-            
-            const suggestions = generateHealthSuggestions();
+            doc.setFontSize(14);
+            doc.setTextColor(22, 163, 74);
+            doc.text('Health Metrics', 15, y);
+            y += 8;
+
+            doc.setFillColor(240, 253, 244);
+            doc.roundedRect(15, y - 2, 180, 28, 3, 3, 'F');
+
             doc.setFontSize(10);
-            doc.setTextColor(...textColor);
-            
-            suggestions.forEach((suggestion, index) => {
-                if (yPosition > 270) {
-                    doc.addPage();
-                    yPosition = 20;
-                }
-                
-                const lines = doc.splitTextToSize(`${index + 1}. ${suggestion}`, 170);
-                doc.text(lines, 20, yPosition);
-                yPosition += (lines.length * 5) + 3;
+            doc.setTextColor(15, 31, 18);
+            doc.text('BMI: ' + AppState.userHealth.bmi.toFixed(1) + ' (' + AppState.userHealth.category + ')', 20, y + 6);
+            doc.text('BMR: ' + Math.round(AppState.userHealth.bmr) + ' cal/day', 20, y + 13);
+            doc.text('Height: ' + AppState.userHealth.height + ' cm  |  Weight: ' + AppState.userHealth.weight + ' kg  |  Age: ' + AppState.userHealth.age + '  |  Gender: ' + AppState.userHealth.gender, 20, y + 20);
+
+            y += 35;
+        }
+
+        // Nutrition Summary
+        doc.setFontSize(14);
+        doc.setTextColor(22, 163, 74);
+        doc.text('Nutrition Summary', 15, y);
+        y += 8;
+
+        doc.setFillColor(240, 253, 244);
+        doc.roundedRect(15, y - 2, 180, 18, 3, 3, 'F');
+        doc.setFontSize(10);
+        doc.setTextColor(15, 31, 18);
+        doc.text('Meals: ' + summary.totalMeals + '  |  Calories: ' + Math.round(summary.totalCalories) + ' kcal  |  Protein: ' + Math.round(summary.totalProtein) + 'g  |  Carbs: ' + Math.round(summary.totalCarbs) + 'g  |  Fat: ' + Math.round(summary.totalFat) + 'g', 20, y + 8);
+
+        y += 25;
+
+        // Meal Breakdown
+        var mealTypes = ['breakfast', 'lunch', 'dinner', 'snacks'];
+        var mealLabels = { breakfast: 'Breakfast', lunch: 'Lunch', dinner: 'Dinner', snacks: 'Snacks' };
+
+        mealTypes.forEach(function(type) {
+            var meals = AppState.mealPlan[type];
+            var bd = summary.mealBreakdown[type];
+
+            if (y > 250) { doc.addPage(); y = 20; }
+
+            doc.setFontSize(12);
+            doc.setTextColor(14, 165, 233);
+            doc.text(mealLabels[type] + ' (' + bd.count + ' items, ' + bd.calories + ' kcal)', 15, y);
+            y += 6;
+
+            if (meals.length > 0) {
+                meals.forEach(function(meal, idx) {
+                    if (y > 270) { doc.addPage(); y = 20; }
+                    doc.setFontSize(9);
+                    doc.setTextColor(60, 60, 60);
+                    doc.text((idx + 1) + '. ' + meal.name + '  (' + (meal.calories || 0) + ' kcal | P:' + (meal.protein || 0) + 'g | C:' + (meal.carbs || 0) + 'g | F:' + (meal.fat || 0) + 'g)', 20, y);
+                    y += 5;
+                });
+            } else {
+                doc.setFontSize(9);
+                doc.setTextColor(150, 150, 150);
+                doc.text('No meals added', 20, y);
+                y += 5;
+            }
+            y += 5;
+        });
+
+        // Health Suggestions
+        if (AppState.userHealth.bmi) {
+            if (y > 220) { doc.addPage(); y = 20; }
+
+            doc.setFontSize(14);
+            doc.setTextColor(22, 163, 74);
+            doc.text('Health Recommendations', 15, y);
+            y += 8;
+
+            var suggestions = generateHealthSuggestions();
+            doc.setFontSize(9);
+            doc.setTextColor(60, 60, 60);
+            suggestions.forEach(function(s, i) {
+                if (y > 270) { doc.addPage(); y = 20; }
+                var lines = doc.splitTextToSize((i + 1) + '. ' + s, 175);
+                doc.text(lines, 18, y);
+                y += lines.length * 4.5 + 2;
             });
         }
-        
-        // Footer
-        const pageCount = doc.internal.getNumberOfPages();
-        for (let i = 1; i <= pageCount; i++) {
+
+        // Footer on all pages
+        var pages = doc.internal.getNumberOfPages();
+        for (var i = 1; i <= pages; i++) {
             doc.setPage(i);
-            doc.setFontSize(8);
-            doc.setTextColor(...secondaryColor);
-            doc.text(`Page ${i} of ${pageCount}`, 105, 290, { align: 'center' });
-            doc.text('Generated by HealthFit - Your Personal Health Companion', 105, 285, { align: 'center' });
+            doc.setFillColor(22, 163, 74);
+            doc.rect(0, 287, 210, 1, 'F');
+            doc.setFontSize(7);
+            doc.setTextColor(150, 150, 150);
+            doc.text('HealthFit - Personal Health & Nutrition Planner | Page ' + i + ' of ' + pages, 105, 293, { align: 'center' });
         }
-        
-        // Save PDF
-        doc.save(`HealthFit-Meal-Plan-${today}.pdf`);
-        
-        showToast('PDF report generated successfully!', 'success');
-        
+
+        doc.save('HealthFit-Report-' + today + '.pdf');
+        showToast('PDF report downloaded!', 'success');
+
     } catch (error) {
-        console.error('Error generating PDF:', error);
+        console.error('PDF Error:', error);
         showToast('Error generating PDF. Please try again.', 'error');
     }
 }
 
-// Make function globally accessible
 window.generatePDF = generatePDF;
