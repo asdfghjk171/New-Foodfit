@@ -46,9 +46,9 @@
             <section id="landing-page" class="page active" data-testid="landing-page">
                 <div class="landing-container">
                     <div class="landing-hero">
-                        <div class="hero-badge" data-testid="hero-badge">AI-Powered Nutrition</div>
-                        <h1 class="hero-title" data-testid="hero-title">Your Health Journey<br>Starts With <span class="gradient-text">HealthFit</span></h1>
-                        <p class="hero-description" data-testid="hero-description">Track nutrition, plan meals with 1500+ Indian & international recipes, calculate BMI/BMR, and download detailed health reports.</p>
+                        <div class="hero-badge" data-testid="hero-badge">Smart Food Recommendations</div>
+                        <h1 class="hero-title" data-testid="hero-title">Personalized Food<br>Recommendations for <span class="gradient-text">Your Health</span></h1>
+                        <p class="hero-description" data-testid="hero-description">Get smart food recommendations based on your BMI, plan daily meals with 1500+ Indian & international recipes, and download detailed health reports with exercise guidance.</p>
                         <div class="hero-buttons">
                             <button id="get-started-btn" class="btn btn-primary btn-glow" data-testid="get-started-btn"><i class="fas fa-rocket"></i> Get Started</button>
                             <button id="login-btn" class="btn btn-outline" data-testid="login-btn"><i class="fas fa-sign-in-alt"></i> Login</button>
@@ -238,11 +238,26 @@
                         </div>
                     </div>
 
-                    <!-- Recommended Foods Section -->
+                    <!-- Recommended Foods Section - 4 Categories -->
                     <div class="dashboard-section">
                         <div class="section-card" data-testid="recommended-section">
-                            <h2 class="section-title"><i class="fas fa-star"></i> Recommended for You</h2>
-                            <div id="recommended-foods" class="recommended-grid" data-testid="recommended-foods"></div>
+                            <h2 class="section-title"><i class="fas fa-star"></i> Food Recommendations for You</h2>
+                            <div class="rec-category" data-testid="rec-breakfast">
+                                <h3 class="rec-category-title"><i class="fas fa-sun"></i> Breakfast Picks</h3>
+                                <div id="rec-breakfast" class="recommended-grid"></div>
+                            </div>
+                            <div class="rec-category" data-testid="rec-lunch">
+                                <h3 class="rec-category-title"><i class="fas fa-cloud-sun"></i> Lunch Picks</h3>
+                                <div id="rec-lunch" class="recommended-grid"></div>
+                            </div>
+                            <div class="rec-category" data-testid="rec-dinner">
+                                <h3 class="rec-category-title"><i class="fas fa-moon"></i> Dinner Picks</h3>
+                                <div id="rec-dinner" class="recommended-grid"></div>
+                            </div>
+                            <div class="rec-category" data-testid="rec-snacks">
+                                <h3 class="rec-category-title"><i class="fas fa-cookie-bite"></i> Snack Picks</h3>
+                                <div id="rec-snacks" class="recommended-grid"></div>
+                            </div>
                         </div>
                     </div>
                 </div>

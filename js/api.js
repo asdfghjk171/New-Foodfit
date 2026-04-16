@@ -151,39 +151,46 @@ function loadPopularFoods() {
     });
 }
 
-// Recommended foods for dashboard
+// Recommended foods for dashboard - SEPARATED BY CATEGORY
 function loadRecommendedFoods() {
-    const container = document.getElementById('recommended-foods');
-    if (!container) return;
+    var bmi = AppState.userHealth.bmi;
+    var indianCuisines = ['indian','south indian','north indian','punjabi','gujarati','mughlai','hyderabadi','rajasthani','bengali','kashmiri','andhra','goan','maharashtrian','tamil nadu','chettinad','awadhi','kerala'];
 
-    // Get foods matching user's health goals
-    let recommended = [];
-    const bmi = AppState.userHealth.bmi;
-
-    if (bmi && bmi < 18.5) {
-        // High calorie, nutritious foods for underweight
-        recommended = FOOD_DATABASE.filter(f => f.calories > 200 && f.calories < 600).sort(() => Math.random() - 0.5).slice(0, 8);
-    } else if (bmi && bmi >= 25) {
-        // Low calorie, high protein for overweight
-        recommended = FOOD_DATABASE.filter(f => f.calories < 250 && f.protein > 8).sort(() => Math.random() - 0.5).slice(0, 8);
-    } else {
-        // Balanced recommendations
-        recommended = FOOD_DATABASE.filter(f => f.calories > 100 && f.calories < 400).sort(() => Math.random() - 0.5).slice(0, 8);
+    function filterByGoal(foods) {
+        if (bmi && bmi < 18.5) return foods.filter(function(f){return f.calories > 180 && f.calories < 600;});
+        if (bmi && bmi >= 25) return foods.filter(function(f){return f.calories < 300 && f.protein > 6;});
+        return foods.filter(function(f){return f.calories > 80 && f.calories < 450;});
     }
 
-    // Prioritize Indian foods
-    const indianCuisines = ['indian','south indian','north indian','punjabi','gujarati','mughlai'];
-    recommended.sort((a, b) => {
-        const aI = indianCuisines.some(c => a.cuisine.toLowerCase().includes(c));
-        const bI = indianCuisines.some(c => b.cuisine.toLowerCase().includes(c));
-        if (aI && !bI) return -1;
-        if (!aI && bI) return 1;
-        return 0;
-    });
+    function sortIndianFirst(arr) {
+        return arr.sort(function(a,b){
+            var aI = indianCuisines.some(function(c){return a.cuisine.toLowerCase().includes(c);});
+            var bI = indianCuisines.some(function(c){return b.cuisine.toLowerCase().includes(c);});
+            if(aI && !bI) return -1; if(!aI && bI) return 1; return 0;
+        });
+    }
 
-    container.innerHTML = '';
-    recommended.forEach(food => {
-        container.appendChild(createFoodCard(food));
+    var categories = {
+        breakfast: FOOD_DATABASE.filter(function(f){return f.mealCategory === 'breakfast';}),
+        lunch: FOOD_DATABASE.filter(function(f){return f.mealCategory === 'lunch';}),
+        dinner: FOOD_DATABASE.filter(function(f){return f.mealCategory === 'dinner';}),
+        snacks: FOOD_DATABASE.filter(function(f){return f.mealCategory === 'snacks';})
+    };
+
+    ['breakfast','lunch','dinner','snacks'].forEach(function(cat) {
+        var container = document.getElementById('rec-' + cat);
+        if (!container) return;
+
+        var filtered = filterByGoal(categories[cat]);
+        filtered = filtered.sort(function(){return Math.random()-0.5;}).slice(0, 20);
+        filtered = sortIndianFirst(filtered).slice(0, 4);
+
+        container.innerHTML = '';
+        if (filtered.length === 0) {
+            container.innerHTML = '<p style="color:var(--text-muted);font-size:0.88rem;padding:0.5rem;">No matching items for this category</p>';
+            return;
+        }
+        filtered.forEach(function(food){ container.appendChild(createFoodCard(food)); });
     });
 }
 

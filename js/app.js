@@ -500,30 +500,44 @@ function getCategoryColor(cat) {
 }
 
 function generateHealthSuggestions() {
-    const bmi = AppState.userHealth.bmi;
-    const bmr = AppState.userHealth.bmr;
-    const s = [];
+    var bmi = AppState.userHealth.bmi;
+    var bmr = AppState.userHealth.bmr;
+    var s = [];
 
     if (bmi < 18.5) {
         s.push('You are underweight. Include calorie-dense foods like paneer, ghee, banana shakes, and nuts.');
         s.push('Target ' + Math.round(bmr * 1.2 + 400) + ' calories daily with 5-6 smaller meals.');
         s.push('Add dal-chawal, paratha with curd, and dry fruits to your daily diet.');
         s.push('Strength training with proper nutrition helps build healthy weight.');
+        s.push('Exercise Plan: Focus on weight/strength training 4 days/week (45 min each). Do compound exercises like squats, deadlifts, bench press, and rows. Rest 2-3 days. Avoid excessive cardio.');
+        s.push('Add 20 min of yoga or stretching daily for flexibility and stress relief. Try Surya Namaskar (12 rounds) every morning.');
+        s.push('Ensure 7-8 hours of sleep for muscle recovery and healthy weight gain.');
     } else if (bmi < 25) {
         s.push('Great! Your weight is in the healthy range. Maintain balanced nutrition.');
         s.push('Target around ' + Math.round(bmr * 1.2) + ' calories daily.');
         s.push('Include a mix of roti, sabzi, dal, salad, and fruits in every meal.');
         s.push('Stay active with 30 minutes of exercise daily for overall fitness.');
+        s.push('Exercise Plan: Mix of cardio + strength training. 3 days strength (push-ups, squats, lunges, planks - 40 min), 2 days cardio (brisk walking, cycling, swimming - 30 min), 2 days active rest (yoga/stretching).');
+        s.push('Try interval training: alternate 1 min jogging with 2 min walking for 20 min. Gradually increase intensity.');
+        s.push('Include 10 min daily stretching routine. Maintain 7-8 hours sleep for optimal metabolism.');
     } else if (bmi < 30) {
         s.push('You are overweight. A moderate calorie deficit will help.');
         s.push('Target ' + Math.round(bmr * 1.2 - 400) + ' calories daily for gradual weight loss.');
         s.push('Replace fried snacks with roasted chana, sprouts, and buttermilk.');
         s.push('Walk 45 minutes daily and reduce rice/roti portions at dinner.');
+        s.push('Exercise Plan: Daily 45-60 min brisk walking or cycling. Add bodyweight exercises 3 days/week: 3 sets each of squats (15 reps), push-ups (10 reps), lunges (12 per leg), planks (30 sec hold).');
+        s.push('HIIT workouts 2x/week: 20 min sessions with burpees, jumping jacks, mountain climbers. Burns more fat in less time.');
+        s.push('Avoid sitting for more than 1 hour continuously. Take 5-min walking breaks. Aim for 8,000-10,000 steps daily.');
+        s.push('Try morning yoga (30 min) - Bhujangasana, Dhanurasana, and Pawanmuktasana are excellent for weight management.');
     } else {
-        s.push('BMI indicates obesity. Please consult a healthcare professional.');
+        s.push('BMI indicates obesity. Please consult a healthcare professional before starting intense exercise.');
         s.push('Target ' + Math.round(bmr * 1.2 - 500) + ' calories with nutrient-dense foods.');
         s.push('Focus on vegetables, dal, grilled proteins, and avoid sugary drinks.');
         s.push('Start with light walks and gradually increase activity level.');
+        s.push('Exercise Plan: Begin with 20-30 min slow walking daily. After 2 weeks increase to 40 min. Add gentle chair exercises and water aerobics if possible.');
+        s.push('Low-impact activities: swimming, stationary cycling, or elliptical machine for 20 min, 3x/week. These are joint-friendly.');
+        s.push('Once comfortable, add simple bodyweight exercises: wall push-ups (10 reps), chair squats (10 reps), standing calf raises (15 reps). 2 sets each, 3 days/week.');
+        s.push('Prioritize sleep (7-9 hours) and stress management. High cortisol from stress increases belly fat. Try deep breathing exercises for 10 min daily.');
     }
     return s;
 }
